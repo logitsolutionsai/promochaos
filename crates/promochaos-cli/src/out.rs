@@ -69,6 +69,14 @@ fn pretty<T: Serialize>(v: &T) -> Result<String> {
     Ok(serde_json::to_string_pretty(v)? + "\n")
 }
 
+/// The real location of an existing path, through symlinks; the absolute
+/// spelling when it cannot be resolved.
+fn real_path(p: &Path) -> std::path::PathBuf {
+    std::fs::canonicalize(p)
+        .or_else(|_| std::path::absolute(p))
+        .unwrap_or_else(|_| p.to_path_buf())
+}
+
 fn toml_text<T: Serialize>(v: &T, what: &str) -> Result<String> {
     toml::to_string_pretty(v).map_err(|e| Error::internal(format!("could not write {what}: {e}")))
 }
@@ -84,14 +92,27 @@ pub fn write_findings(
         .settings_path
         .as_ref()
         .map(|p| std::path::absolute(p).unwrap_or_else(|_| p.clone()));
+    // Both ends of the relative path are resolved through symlinks first:
+    // on macOS the temp folder /var is a link to /private/var, and the OS
+    // resolves `..` on the real path, so a relative path computed from the
+    // linked spelling points one folder too high.
+    let settings_real = resolved.settings_path.as_deref().map(real_path);
+    let findings_root = dir.join("findings");
+    std::fs::create_dir_all(&findings_root).map_err(|e| {
+        Error::internal(format!("could not create {}: {e}", findings_root.display()))
+    })?;
+    let findings_real = real_path(&findings_root);
     let info = results.target.clone();
     for f in &mut results.findings {
-        let fdir = dir.join("findings").join(&f.id);
+        let fdir = findings_root.join(&f.id);
         // Relative to the finding folder, so a results folder can be moved
         // or shared with its repo and no absolute path leaks into it.
         let settings_path = settings_abs.as_ref().map(|abs| {
-            let fabs = std::path::absolute(&fdir).unwrap_or_else(|_| fdir.clone());
-            match promochaos_core::util::relative_to(abs, &fabs) {
+            let from = findings_real.join(&f.id);
+            let rel = settings_real
+                .as_ref()
+                .and_then(|target| promochaos_core::util::relative_to(target, &from));
+            match rel {
                 Some(rel) => promochaos_core::util::portable_path(&rel),
                 None => abs.display().to_string(),
             }
