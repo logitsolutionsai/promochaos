@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/media/hero-dark.webp">
+    <source media="(prefers-color-scheme: light)" srcset="docs/media/hero-light.webp">
+    <img src="docs/media/hero-light.webp" width="100%" alt="The six kinds of carts promochaos generates, beside its report on the example Shopify discount function: 4 problems in 500 carts, the instruction budget chart, and a ledger where a $200.00 cart got $20.00 off instead of the $40.00 its config expects.">
+  </picture>
+</p>
+
 > The results below were measured on 2026-11-15 on one Windows 11 machine (Intel Core i7-1280P, 16 GB), from a source build; anything still marked TBD has not been measured.
 
 # promochaos
