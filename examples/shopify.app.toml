@@ -1,0 +1,23 @@
+# Minimal app config for the promochaos examples, so that
+#   shopify app function build --path functions/<name>
+# can run from this folder without logging in to a store. This is not a real
+# app and is never deployed.
+#
+# FIRST USE: check these key names against the Shopify CLI version you have
+# (`shopify app config` documents them). `extension_directories` points the CLI
+# at functions/ instead of the default extensions/.
+
+client_id = "promochaos-examples-not-a-real-app"
+name = "promochaos-examples"
+application_url = "https://example.com"
+embedded = false
+extension_directories = ["functions/*"]
+
+[access_scopes]
+scopes = ""
+
+[auth]
+redirect_urls = ["https://example.com/auth/callback"]
+
+[webhooks]
+api_version = "2026-07"

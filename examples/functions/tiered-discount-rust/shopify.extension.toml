@@ -1,0 +1,19 @@
+# schema.graphql is not committed. Fetch it for this api_version from examples/:
+#   shopify app function schema --path functions/tiered-discount-rust --client-id <your app client ID>
+api_version = "2026-07"
+
+[[extensions]]
+name = "Tiered discount (promochaos example)"
+handle = "tiered-discount-rust"
+type = "function"
+description = "Tiered order discount with a multi-buy product discount, with seeded bugs for promochaos."
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart_lines_discounts_generate_run"
+
+  [extensions.build]
+  command = "cargo build --target=wasm32-unknown-unknown --release"
+  path = "target/wasm32-unknown-unknown/release/tiered-discount-rust.wasm"
+  watch = [ "src/**/*.rs" ]

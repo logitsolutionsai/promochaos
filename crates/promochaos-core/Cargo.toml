@@ -1,0 +1,26 @@
+[package]
+name = "promochaos-core"
+description = "Money, cart model, generators, rules, shrinker and results for promochaos."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[package.metadata.dist]
+dist = false
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+rust_decimal.workspace = true
+rand_chacha.workspace = true
+rand_core.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+# Generates docs/results-schema.json in a unit test (results.rs); test builds only.
+schemars = { version = "1.2", features = ["rust_decimal1"] }
+proptest.workspace = true

@@ -1,0 +1,27 @@
+[package]
+name = "promochaos-shopify"
+description = "Shopify Function target for promochaos: discovery, GraphQL input rendering, output checks and runners."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[package.metadata.dist]
+dist = false
+
+[features]
+default = ["in-process"]
+# Links Shopify's function-runner (and wasmtime 48) into promochaos. Without
+# it only the subprocess runner (`function-runner --json`) is available.
+in-process = ["dep:function-runner", "dep:wasmtime"]
+
+[dependencies]
+promochaos-core.workspace = true
+promochaos-command.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+apollo-compiler.workspace = true
+function-runner = { workspace = true, optional = true }
+wasmtime = { workspace = true, optional = true }

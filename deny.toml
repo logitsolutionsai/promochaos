@@ -1,0 +1,78 @@
+# cargo-deny configuration (config format version 2).
+# Run with: cargo deny check
+
+[graph]
+all-features = false
+no-default-features = false
+
+[output]
+feature-depth = 1
+
+[advisories]
+version = 2
+db-path = "$CARGO_HOME/advisory-dbs"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+yanked = "deny"
+ignore = []
+
+[licenses]
+version = 2
+# Only these licences are accepted. Anything else fails the check, which
+# blocks GPL, LGPL and AGPL in every form (-only, -or-later, WITH exceptions).
+# Never add a GPL, LGPL or AGPL identifier here.
+#
+# A crate offered under a choice of licences ("A OR B") passes when one of the
+# choices is on this list, and that is the licence we take. On 2026-11-15 two
+# crates offer a copyleft choice that we do not take:
+#   ittapi, ittapi-sys 0.4.0 (via wasmtime): GPL-2.0-only OR BSD-3-Clause; we take BSD-3-Clause.
+#   r-efi 5.3.0, 6.0.0: MIT OR Apache-2.0 OR LGPL-2.1-or-later; we take MIT or Apache-2.0.
+#
+# "Apache-2.0 WITH LLVM-exception" is wasmtime's, cranelift's, winch's and
+# deterministic-wasi-ctx's licence (Bytecode Alliance). It is Apache-2.0 with an
+# extra permission, so it is no stricter than plain Apache-2.0.
+allow = [
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "MIT",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "Unicode-3.0",
+  "Zlib",
+  "MPL-2.0",
+]
+# ISC and CC0-1.0 were removed on 2026-11-15 because no dependency used them.
+confidence-threshold = 0.9
+exceptions = []
+
+# function-runner v9.2.3 (git dependency) has no `license` field in its
+# Cargo.toml. Its repository ships the full Apache License 2.0 text in
+# LICENSE.md (its README does not mention a licence).
+# Without this clarification cargo-deny guesses the licence from the file text;
+# with it, the licence is pinned to that exact file. The hash is cargo-deny's
+# file hash (xxHash32) of LICENSE.md at tag v9.2.3, checked on 2026-11-15 by
+# swapping the expression for a GPL one and seeing the check fail. If a
+# function-runner bump changes the file, cargo-deny silently ignores this entry,
+# so check the hash again on every bump.
+[[licenses.clarify]]
+crate = "function-runner"
+expression = "Apache-2.0"
+license-files = [{ path = "LICENSE.md", hash = 0xe4d34731 }]
+
+[licenses.private]
+# Workspace crates are not published to crates.io.
+ignore = true
+registries = []
+
+[bans]
+multiple-versions = "warn"
+wildcards = "allow"
+highlight = "all"
+deny = []
+skip = []
+skip-tree = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = ["https://github.com/Shopify/function-runner"]

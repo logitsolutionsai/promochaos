@@ -1,0 +1,168 @@
+# Synthetic catalog for the tiered discount example. Every id is made up.
+# Prices are minor units of the store currency (USD cents).
+# Multi-buy products cost at least 39.00, so two of them clear the 50.00
+# minimum subtotal. Every product tagged gift-card has gift_card = true.
+
+[[products]]
+id = "gid://shopify/Product/1001"
+title = "Linen Shirt"
+tags = ["multi-buy", "shirt"]
+collections = ["gid://shopify/Collection/10"]
+gift_card = false
+vendor = "Example Mill"
+product_type = "Shirts"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2001"
+  title = "M / Natural"
+  price = 4500
+  sku = "LS-M-NAT"
+  requires_shipping = true
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2002"
+  title = "L / Natural"
+  price = 4500
+  sku = "LS-L-NAT"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1002"
+title = "Oxford Shirt"
+tags = ["multi-buy", "shirt"]
+collections = ["gid://shopify/Collection/10"]
+gift_card = false
+vendor = "Example Mill"
+product_type = "Shirts"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2003"
+  title = "M / Blue"
+  price = 3900
+  sku = "OX-M-BLU"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1003"
+title = "Canvas Tote"
+tags = ["bag"]
+collections = ["gid://shopify/Collection/11"]
+gift_card = false
+vendor = "Example Works"
+product_type = "Bags"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2004"
+  title = "Natural"
+  price = 10000
+  sku = "CT-NAT"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1004"
+title = "Market Tote"
+tags = ["bag"]
+collections = ["gid://shopify/Collection/11"]
+gift_card = false
+vendor = "Example Works"
+product_type = "Bags"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2005"
+  title = "Olive"
+  price = 2500
+  sku = "MT-OLV"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1005"
+title = "Wool Socks"
+tags = ["socks"]
+collections = ["gid://shopify/Collection/12"]
+gift_card = false
+vendor = "Example Knits"
+product_type = "Socks"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2006"
+  title = "One size"
+  price = 1000
+  sku = "WS-OS"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1006"
+title = "Rain Jacket"
+tags = ["outerwear"]
+collections = ["gid://shopify/Collection/13"]
+gift_card = false
+vendor = "Example Outdoor"
+product_type = "Jackets"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2007"
+  title = "M / Black"
+  price = 20000
+  sku = "RJ-M-BLK"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1007"
+title = "Leather Belt"
+tags = ["accessories"]
+collections = ["gid://shopify/Collection/14"]
+gift_card = false
+vendor = "Example Leather"
+product_type = "Belts"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2008"
+  title = "32"
+  price = 5500
+  sku = "LB-32"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1008"
+title = "Enamel Mug"
+tags = ["kitchen"]
+collections = ["gid://shopify/Collection/16"]
+gift_card = false
+vendor = "Example Works"
+product_type = "Mugs"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2010"
+  title = "White"
+  price = 1250
+  sku = "EM-WHT"
+  requires_shipping = true
+
+[[products]]
+id = "gid://shopify/Product/1010"
+title = "Gift Card"
+tags = ["gift-card"]
+collections = []
+gift_card = true
+vendor = "Example Store"
+product_type = "Gift Cards"
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2011"
+  title = "25.00"
+  price = 2500
+  sku = "GC-25"
+  requires_shipping = false
+
+  [[products.variants]]
+  id = "gid://shopify/ProductVariant/2013"
+  title = "100.00"
+  price = 10000
+  sku = "GC-100"
+  requires_shipping = false
+
+[[custom_products]]
+title = "Gift Wrap"
+price = 500
+gift_card = false
+requires_shipping = false

@@ -1,0 +1,1490 @@
+{
+  "$id": "https://github.com/logitsolutionsai/promochaos/blob/main/docs/results-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunResults",
+  "description": "results.json written by promochaos run. Generated from crates/promochaos-core/src/results.rs; do not edit by hand.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "tool": {
+      "$ref": "#/$defs/ToolInfo"
+    },
+    "started_at": {
+      "description": "Wall-clock facts. They are kept in run.toml and left out of\nresults.json and report.html, so the same seed and inputs give\nbyte-identical files.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "duration_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint64",
+      "minimum": 0
+    },
+    "seed": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0
+    },
+    "target": {
+      "$ref": "#/$defs/TargetInfo"
+    },
+    "config_summary": {
+      "description": "\"10% from $100.00, 20% from $200.00\".",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "config_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inputs_hash": {
+      "type": "string"
+    },
+    "counts": {
+      "$ref": "#/$defs/Counts"
+    },
+    "median_instructions": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint64",
+      "minimum": 0
+    },
+    "budget": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BudgetPoint"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RuleStat"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FindingRecord"
+      }
+    },
+    "carts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CartRecord"
+      }
+    },
+    "not_checked": {
+      "description": "Always present: what promochaos does not simulate.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NotChecked"
+      }
+    },
+    "notes": {
+      "description": "Runner notes, such as the 20,000-byte output mismatch.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "results_dir": {
+      "type": "string"
+    },
+    "exit_code": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "inputs": {
+      "description": "Any extra key/value facts (resolved settings file, catalog).",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "tool",
+    "seed",
+    "target",
+    "inputs_hash",
+    "counts",
+    "budget",
+    "rules",
+    "findings",
+    "carts",
+    "not_checked",
+    "notes",
+    "results_dir",
+    "exit_code",
+    "inputs"
+  ],
+  "$defs": {
+    "ToolInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "function_runner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "api_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "TargetInfo": {
+      "description": "Facts about a target, for the report header and run.toml.",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "description": "`shopify-function` or `command`.",
+          "type": "string"
+        },
+        "label": {
+          "description": "Extension folder or command line, as shown to the user.",
+          "type": "string"
+        },
+        "run_target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "export": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wasm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wasm_kib": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "language": {
+          "description": "`Rust`, `JavaScript` or `Wasm`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runner": {
+          "description": "`function-runner 9.2.3, in-process`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "api_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "function_runner_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rust_tests": {
+          "description": "Whether the exported Rust test applies.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "label",
+        "rust_tests"
+      ]
+    },
+    "Counts": {
+      "type": "object",
+      "properties": {
+        "carts": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "twins": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "runs": {
+          "description": "Every target run, shrinking included.",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "shrink_runs": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "determinism_runs": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "order_runs": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "by_generator": {
+          "description": "Carts per generator, in generator order.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "format": "uint",
+                "minimum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      },
+      "required": [
+        "carts",
+        "twins",
+        "runs",
+        "shrink_runs",
+        "determinism_runs",
+        "order_runs",
+        "by_generator"
+      ]
+    },
+    "BudgetPoint": {
+      "type": "object",
+      "properties": {
+        "lines": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "instructions": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "lines",
+        "instructions",
+        "limit"
+      ]
+    },
+    "RuleStat": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "checked": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "warned": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "not_applicable": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "reasons": {
+          "description": "Why some were not checked, with counts, sorted by count then text.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "format": "uint",
+                "minimum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      },
+      "required": [
+        "rule",
+        "from",
+        "checked",
+        "failed",
+        "warned",
+        "not_applicable",
+        "reasons"
+      ]
+    },
+    "FindingRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "`F-001`, the folder name.",
+          "type": "string"
+        },
+        "label": {
+          "description": "`F1`, the label in the terminal and report.",
+          "type": "string"
+        },
+        "rule": {
+          "type": "string"
+        },
+        "kind": {
+          "description": "`over_limit`, `crashed`, `rule_broken` or `warning`.",
+          "type": "string"
+        },
+        "kind_label": {
+          "type": "string"
+        },
+        "severity": {
+          "description": "`failure` or `warning`.",
+          "type": "string"
+        },
+        "fingerprint": {
+          "$ref": "#/$defs/Fingerprint"
+        },
+        "sentence": {
+          "type": "string"
+        },
+        "count": {
+          "description": "Carts (or twin pairs) that showed it.",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "count_unit": {
+          "type": "string"
+        },
+        "of_checked": {
+          "description": "For twin rules: how many pairs were checked.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint",
+          "minimum": 0
+        },
+        "shrunk_summary": {
+          "description": "`shrunk to 178 lines`, `shrunk from 7 lines to 1`.",
+          "type": "string"
+        },
+        "flaky": {
+          "type": "boolean"
+        },
+        "shrink_runs": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Detail"
+          }
+        },
+        "cart": {
+          "$ref": "#/$defs/Cart"
+        },
+        "cart_rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CartRow"
+          }
+        },
+        "cart_rows_more": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "input": true,
+        "output": true,
+        "output_pretty": {
+          "type": "string"
+        },
+        "logs_first_line": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ledger": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Ledger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expected_discount": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "twin": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TwinRecord"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "likely_cause": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "curve": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BudgetPoint"
+          }
+        },
+        "expect": {
+          "$ref": "#/$defs/Expect"
+        },
+        "replay": {
+          "description": "Paths relative to the results folder's parent, forward slashes.",
+          "type": "string"
+        },
+        "test_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fixture_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "rule",
+        "kind",
+        "kind_label",
+        "severity",
+        "fingerprint",
+        "sentence",
+        "count",
+        "count_unit",
+        "shrunk_summary",
+        "flaky",
+        "shrink_runs",
+        "details",
+        "cart",
+        "cart_rows",
+        "cart_rows_more",
+        "input",
+        "output_pretty",
+        "curve",
+        "expect",
+        "replay"
+      ]
+    },
+    "Fingerprint": {
+      "description": "`(rule id, outcome kind, trap message first line or limit name)`.\nShrinking keeps it; findings with the same one collapse into one entry.",
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/OutcomeKind"
+        },
+        "key": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "kind",
+        "key"
+      ]
+    },
+    "OutcomeKind": {
+      "description": "The outcome label from the Report Kit.",
+      "type": "string",
+      "enum": [
+        "over_limit",
+        "crashed",
+        "rule_broken",
+        "warning"
+      ]
+    },
+    "Detail": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ]
+    },
+    "Cart": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "currency": {
+          "description": "Presentment currency code.",
+          "type": "string"
+        },
+        "rate": {
+          "description": "Store currency to presentment currency, as a decimal string.",
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Line"
+          }
+        },
+        "codes": {
+          "description": "Entered discount codes.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "buyer": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Buyer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivery": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeliveryGroup"
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Attribute"
+          }
+        },
+        "config": {
+          "$ref": "#/$defs/ConfigState"
+        },
+        "config_shape": {
+          "$ref": "#/$defs/ConfigShape"
+        },
+        "discount_classes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "currency",
+        "rate",
+        "lines",
+        "codes",
+        "delivery",
+        "attributes",
+        "config",
+        "config_shape",
+        "discount_classes"
+      ]
+    },
+    "Line": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "`gid://shopify/CartLine/1`",
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unit_price": {
+          "description": "Per item, in minor units of the cart currency.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "compare_at_price": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "merchandise": {
+          "$ref": "#/$defs/Merchandise"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Attribute"
+          }
+        },
+        "selling_plan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SellingPlan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parent_line_id": {
+          "description": "Bundle child: the id of the parent line.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "existing_discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExistingDiscount"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "quantity",
+        "unit_price",
+        "merchandise",
+        "attributes",
+        "existing_discounts"
+      ]
+    },
+    "Merchandise": {
+      "description": "`ProductVariant` or `CustomProduct`, as in the Discount API's\n`Merchandise` union.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "variant": {
+              "$ref": "#/$defs/VariantRef"
+            }
+          },
+          "required": [
+            "variant"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "custom": {
+              "$ref": "#/$defs/CustomRef"
+            }
+          },
+          "required": [
+            "custom"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "VariantRef": {
+      "type": "object",
+      "properties": {
+        "variant_id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "variant_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sku": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "handle": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "collections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gift_card": {
+          "type": "boolean"
+        },
+        "requires_shipping": {
+          "type": "boolean"
+        },
+        "vendor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "product_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "variant_id",
+        "product_id",
+        "title",
+        "handle",
+        "tags",
+        "collections",
+        "gift_card",
+        "requires_shipping"
+      ]
+    },
+    "CustomRef": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "gift_card": {
+          "type": "boolean"
+        },
+        "requires_shipping": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title",
+        "gift_card",
+        "requires_shipping"
+      ]
+    },
+    "Attribute": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "key"
+      ]
+    },
+    "SellingPlan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "recurring_deliveries": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "recurring_deliveries"
+      ]
+    },
+    "ExistingDiscount": {
+      "description": "A discount already on the line before this function runs.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "title",
+        "amount"
+      ]
+    },
+    "Buyer": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/BuyerKind"
+        },
+        "customer_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "number_of_orders": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "amount_spent": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "company_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "company_location_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "tags",
+        "number_of_orders",
+        "amount_spent"
+      ]
+    },
+    "BuyerKind": {
+      "type": "string",
+      "enum": [
+        "consumer",
+        "b2b"
+      ]
+    },
+    "DeliveryGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "line_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeliveryOption"
+          }
+        },
+        "selected": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "line_ids",
+        "options"
+      ]
+    },
+    "DeliveryOption": {
+      "type": "object",
+      "properties": {
+        "handle": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "method": {
+          "description": "`SHIPPING`, `PICK_UP`, `LOCAL`, ...",
+          "type": "string"
+        }
+      },
+      "required": [
+        "handle",
+        "title",
+        "price",
+        "method"
+      ]
+    },
+    "ConfigState": {
+      "description": "The discount's configuration (`discount.metafield.jsonValue`) for one cart.",
+      "oneOf": [
+        {
+          "description": "No metafield on the discount: `metafield` is `null`.",
+          "type": "string",
+          "const": "missing"
+        },
+        {
+          "description": "A metafield whose jsonValue is this.",
+          "type": "object",
+          "properties": {
+            "value": true
+          },
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ConfigShape": {
+      "description": "How a cart's config differs from the configured one. Used by the\nshrinker (\"simplify the config only when the failure is about config\")\nand by sentences.",
+      "type": "string",
+      "enum": [
+        "normal",
+        "missing",
+        "empty",
+        "unexpected"
+      ]
+    },
+    "CartRow": {
+      "type": "object",
+      "properties": {
+        "line": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "subtotal": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "line",
+        "name",
+        "quantity",
+        "subtotal"
+      ]
+    },
+    "Ledger": {
+      "description": "The working for one cart.",
+      "type": "object",
+      "properties": {
+        "subtotal": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "product_discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LineDiscount"
+          }
+        },
+        "order_discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OrderDiscount"
+          }
+        },
+        "shipping_discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ShippingDiscount"
+          }
+        },
+        "codes_accepted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codes_rejected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "candidates": {
+          "description": "Number of candidates the output listed, for the \"none\" row.",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LedgerRow"
+          }
+        }
+      },
+      "required": [
+        "subtotal",
+        "product_discounts",
+        "order_discounts",
+        "shipping_discounts",
+        "codes_accepted",
+        "codes_rejected",
+        "candidates",
+        "rows"
+      ]
+    },
+    "LineDiscount": {
+      "type": "object",
+      "properties": {
+        "line_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "percent": {
+          "description": "Percentage as a decimal string, when the candidate was a percentage.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "line_id",
+        "amount"
+      ]
+    },
+    "OrderDiscount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "percent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "base": {
+          "description": "The amount the order discount was taken on.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "excluded_line_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope_known": {
+          "description": "False when the target did not say which lines the order discount\ncovers (a command engine that reports no line ids). `never_discount`\nthen cannot check it.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "amount",
+        "base",
+        "excluded_line_ids",
+        "scope_known"
+      ]
+    },
+    "ShippingDiscount": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "description": "Delivery group id or delivery option handle.",
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "percent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "target",
+        "amount"
+      ]
+    },
+    "LedgerRow": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "style": {
+          "description": "`normal`, `total` (rule above) or `expected` (failure colour).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value",
+        "style"
+      ]
+    },
+    "TwinRecord": {
+      "type": "object",
+      "properties": {
+        "relation": {
+          "$ref": "#/$defs/Relation"
+        },
+        "cart": {
+          "$ref": "#/$defs/Cart"
+        },
+        "input": true,
+        "output": true,
+        "discount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        }
+      },
+      "required": [
+        "relation",
+        "cart",
+        "input"
+      ]
+    },
+    "Relation": {
+      "type": "string",
+      "enum": [
+        "split_line",
+        "reorder_lines",
+        "add_ineligible_line",
+        "more_spend_never_less"
+      ]
+    },
+    "Expect": {
+      "description": "What an exported test asserts.",
+      "oneOf": [
+        {
+          "description": "The run must succeed.",
+          "type": "string",
+          "const": "no_trap"
+        },
+        {
+          "description": "The order discount must be this percentage, or absent when `None`.",
+          "type": "object",
+          "properties": {
+            "order_percent": {
+              "type": "object",
+              "properties": {
+                "percent": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "required": [
+            "order_percent"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "No order or product discount at all.",
+          "type": "string",
+          "const": "no_discount"
+        },
+        {
+          "description": "These lines must get no product discount and must be excluded from\norder discounts.",
+          "type": "object",
+          "properties": {
+            "lines_not_discounted": {
+              "type": "object",
+              "properties": {
+                "line_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "line_ids"
+              ]
+            }
+          },
+          "required": [
+            "lines_not_discounted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Only these codes may be accepted.",
+          "type": "object",
+          "properties": {
+            "codes_only": {
+              "type": "object",
+              "properties": {
+                "allowed": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "allowed"
+              ]
+            }
+          },
+          "required": [
+            "codes_only"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "The twin must get a discount whenever the original does.",
+          "type": "string",
+          "const": "twin_keeps_discount"
+        },
+        {
+          "description": "Not expressible as a native test (instruction counts, for example).",
+          "type": "object",
+          "properties": {
+            "not_exportable": {
+              "type": "object",
+              "properties": {
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "not_exportable"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "CartRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string"
+        },
+        "subtotal": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "instructions": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "output_bytes": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "crashed": {
+          "type": "boolean"
+        },
+        "discount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "problems": {
+          "description": "Rule ids that failed or warned on this cart, sorted.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "generator",
+        "label",
+        "lines",
+        "currency",
+        "subtotal",
+        "output_bytes",
+        "crashed",
+        "problems"
+      ]
+    },
+    "NotChecked": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "text"
+      ]
+    }
+  }
+}

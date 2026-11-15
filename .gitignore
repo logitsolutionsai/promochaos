@@ -1,0 +1,32 @@
+# Rust build output
+/target/
+target/
+target-fixed/
+
+# promochaos run output
+promochaos-results/
+
+# Built example Functions
+examples/**/dist/
+
+# Function API schemas. These are Shopify files, and we found no licence that
+# allows redistributing them, so they are not committed. Each developer fetches them with the
+# Shopify CLI (needs a Shopify login and the client ID of one of your own apps):
+#   cd examples
+#   shopify app function schema --path functions/tiered-discount-rust --client-id <your app client ID>
+#   shopify app function schema --path functions/bundle-discount-js --client-id <your app client ID>
+examples/functions/*/schema.graphql
+
+# JavaScript dependencies and generated types
+node_modules/
+examples/**/generated/
+
+# Homegrown engine state
+homegrown-state.json
+
+# Editors and OS files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

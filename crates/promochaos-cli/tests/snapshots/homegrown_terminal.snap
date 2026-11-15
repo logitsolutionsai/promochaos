@@ -1,0 +1,24 @@
+---
+source: crates/promochaos-cli/tests/examples.rs
+expression: terminal
+---
+$ promochaos --color never run --settings promochaos.toml --out ../../target/promochaos-snapshot-homegrown
+promochaos 0.1.0 · seed 42
+
+engine    ../../target/debug/homegrown_cart
+generate  300 carts + 180 twins · boundaries 3 · sizes 9 · edges 17 · pairwise 14 · random 257
+run       530 runs of the command  [time]
+shrink    3 failures, 7 runs  [time]
+
+✗ F1  min_subtotal           18 carts     already minimal, 1 line
+      A cart of $90.00 after discounts got a shipping discount of $8.00. Your minimum is $100.00 after discounts.
+      promochaos replay ../../target/promochaos-snapshot-homegrown/findings/F-001
+✗ F2  max_discount_percent   53 carts     already minimal, 1 line
+      This cart got $70.00 off its eligible subtotal of $200.00 (35%). Your cap is 30%.
+      promochaos replay ../../target/promochaos-snapshot-homegrown/findings/F-002
+✗ F3  idempotent_retry       5 sequences  not shrunk
+      Retrying an order with the same idempotency key created a second order (order-2 after order-1) and used the coupon WELCOME20 again: 2 uses after the retry, 1 expected.
+      promochaos replay ../../target/promochaos-snapshot-homegrown/findings/F-003
+
+3 problems in 300 carts.
+report    ../../target/promochaos-snapshot-homegrown/report.html   junit ../../target/promochaos-snapshot-homegrown/junit.xml   exit 1

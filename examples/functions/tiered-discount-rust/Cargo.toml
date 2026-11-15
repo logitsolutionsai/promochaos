@@ -1,0 +1,22 @@
+# Example discount Function for promochaos. Its own Cargo root: it builds for
+# wasm32-unknown-unknown, the way Shopify's Rust template builds.
+[workspace]
+
+[package]
+name = "tiered-discount-rust"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[dependencies]
+shopify_function = "2.3.0"
+
+[features]
+# `cargo build --features fixed` builds the version without the seeded bugs.
+fixed = []
+
+[profile.release]
+lto = true
+opt-level = "z"
+strip = true

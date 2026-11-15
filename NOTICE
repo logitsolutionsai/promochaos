@@ -1,0 +1,41 @@
+promochaos
+Copyright 2026 Logit Solutions AI
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes or links the following third-party work.
+
+--------------------------------------------------------------------------------
+function-runner
+https://github.com/Shopify/function-runner (git tag v9.2.3)
+Copyright 2022, Shopify Inc.
+Licensed under the Apache License, Version 2.0.
+
+promochaos links function-runner as a library to run Functions in-process.
+If promochaos later carries a modified copy of function-runner code (for
+example a module cache around its engine), that code keeps its Apache-2.0
+licence and is marked as modified in the file that holds it.
+
+--------------------------------------------------------------------------------
+Geist and Geist Mono fonts
+https://github.com/vercel/geist-font
+Copyright 2026 The Geist Project Authors
+Licensed under the SIL Open Font License, Version 1.1 (see assets/fonts/OFL.txt).
+
+The Latin subsets are embedded in every report.html that promochaos writes.
+The fonts are not sold on their own and keep their original names.
+
+--------------------------------------------------------------------------------
+Example schema.graphql files (not included)
+
+The example Functions under examples/functions/ need the Discount Function API
+schema (schema.graphql). That file is Shopify's, and the copies published in
+Shopify's extensions-templates repository have no stated licence (checked
+2026-11-14: no LICENSE file, and a private package.json with no licence field).
+So this repository does not include it. Each developer fetches it with the
+Shopify CLI. That needs a Shopify login and the client ID of an app in your
+own Shopify developer account (examples/shopify.app.toml holds a placeholder):
+
+  cd examples
+  shopify app function schema --path functions/tiered-discount-rust --client-id <your app client ID>
+  shopify app function schema --path functions/bundle-discount-js --client-id <your app client ID>

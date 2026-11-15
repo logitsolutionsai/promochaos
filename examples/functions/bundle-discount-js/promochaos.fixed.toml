@@ -1,0 +1,32 @@
+# promochaos settings for the bundle discount example, fixed build
+# (src/index.fixed.js, written to dist/function-fixed.wasm). This run must
+# report zero problems.
+#   promochaos run --settings promochaos.fixed.toml
+# codes_accepted is a built-in rule: only the codes below may be accepted.
+
+[target]
+kind = "shopify-function"
+extension = "."
+run = "cart.lines.discounts.generate.run"
+discount_classes = ["PRODUCT"]
+wasm = "dist/function-fixed.wasm"
+runner = "in-process"
+timeout_ms = 10000
+
+[store]
+currency = "USD"
+catalog = "catalog.toml"
+codes = ["BUNDLE10"]
+
+[rules]
+max_discount_percent = "60"
+never_discount = { gift_cards = true, tags = ["gift-card"] }
+metamorphic = ["split_line", "reorder_lines", "add_ineligible_line"]
+deterministic_sample = 50
+
+[generate]
+seed = 42
+carts = 500
+max_lines = 250
+currencies = ["USD"]
+twins = 60

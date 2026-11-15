@@ -1,0 +1,43 @@
+[package]
+name = "promochaos"
+description = "Throws thousands of generated carts at your discount code to find the carts that break it, then shrinks each one to the smallest cart that still breaks it."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+readme = "../../README.md"
+keywords = ["shopify-functions", "discounts", "testing", "fuzzing", "property-testing"]
+categories = ["development-tools::testing", "command-line-utilities"]
+# Not on crates.io: function-runner is a git dependency. Released with dist.
+publish = false
+
+# publish = false hides the binary from dist; this opts it back in.
+[package.metadata.dist]
+dist = true
+
+[[bin]]
+name = "promochaos"
+path = "src/main.rs"
+
+[features]
+default = ["in-process"]
+in-process = ["promochaos-shopify/in-process"]
+
+[dependencies]
+promochaos-core.workspace = true
+promochaos-shopify = { workspace = true, default-features = false }
+promochaos-command.workspace = true
+promochaos-report.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+
+[dev-dependencies]
+# Snapshot tests of the homegrown example's terminal output and report.html.
+insta = { version = "1.43", features = ["filters"] }
+# Checks that real results.json output validates against docs/results-schema.json.
+jsonschema = { version = "0.61", default-features = false }

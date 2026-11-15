@@ -1,0 +1,18 @@
+# schema.graphql is not committed. Fetch it for this api_version from examples/:
+#   shopify app function schema --path functions/bundle-discount-js --client-id <your app client ID>
+api_version = "2026-07"
+
+[[extensions]]
+name = "Bundle discount (promochaos example)"
+handle = "bundle-discount-js"
+type = "function"
+description = "Bundle product discount with seeded bugs for promochaos."
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart-lines-discounts-generate-run"
+
+  [extensions.build]
+  command = ""
+  path = "dist/function.wasm"

@@ -1,0 +1,38 @@
+# promochaos settings for the tiered discount example, fixed build
+# (cargo build --features fixed, written to dist/function-fixed.wasm by the
+# build scripts). This run must report zero problems.
+#   promochaos run --settings promochaos.fixed.toml
+
+[target]
+kind = "shopify-function"
+extension = "."
+run = "cart.lines.discounts.generate.run"
+config = "config/tiered.json"
+discount_classes = ["ORDER", "PRODUCT"]
+wasm = "dist/function-fixed.wasm"
+runner = "in-process"
+timeout_ms = 10000
+
+[export]
+rust_function = "crate::cart_lines_discounts_generate_run::cart_lines_discounts_generate_run"
+rust_schema = "crate::schema"
+
+[store]
+currency = "USD"
+catalog = "catalog.toml"
+codes = []
+
+[rules]
+max_discount_percent = "30"
+never_discount = { gift_cards = true, tags = ["gift-card"] }
+tiers = { at = "/tiers", threshold = "threshold", percent = "percentage" }
+min_subtotal = "50.00"
+metamorphic = ["split_line", "reorder_lines", "add_ineligible_line"]
+deterministic_sample = 50
+
+[generate]
+seed = 42
+carts = 500
+max_lines = 250
+currencies = ["USD", "JPY", "KWD"]
+twins = 60

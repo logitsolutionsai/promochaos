@@ -1,0 +1,16 @@
+[package]
+name = "promochaos-command"
+description = "Command target for promochaos: tests a homegrown cart engine over stdin and stdout."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[package.metadata.dist]
+dist = false
+
+[dependencies]
+promochaos-core.workspace = true
+serde_json.workspace = true

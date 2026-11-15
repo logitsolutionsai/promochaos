@@ -1,0 +1,6 @@
+# Matches the toolchain function-runner v9.2.3 pins. The example Rust Function
+# builds for wasm32-unknown-unknown (shopify_function 2.x refuses wasm32-wasip1).
+[toolchain]
+channel = "1.95.0"
+targets = ["wasm32-unknown-unknown"]
+components = ["rustfmt", "clippy"]

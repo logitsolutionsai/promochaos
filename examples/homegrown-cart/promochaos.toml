@@ -1,0 +1,38 @@
+# promochaos settings for the homegrown cart engine, default (buggy) build.
+#
+# Build the engine first, from the repository root:
+#   cargo build -p homegrown-cart
+# Then run, from this folder:
+#   promochaos run --settings promochaos.toml
+#
+# promochaos resolves relative paths against the folder of this settings file,
+# so the engine binary is two folders up, in the workspace target folder.
+# On Windows promochaos adds .exe when the path has no extension.
+
+[target]
+kind = "command"
+run = ["../../target/debug/homegrown_cart"]
+reset = ["../../target/debug/homegrown_cart", "--reset"]
+timeout_ms = 2000
+tax_inclusive = false
+shipping_discount_in = "discounts"
+
+[store]
+currency = "USD"
+catalog = "catalog.toml"
+codes = ["WELCOME20"]
+
+[rules]
+max_discount_percent = "30"
+never_discount = { gift_cards = true, tags = ["gift-card"] }
+# Free shipping must be decided on the subtotal after discounts.
+min_subtotal = { amount = "100.00", kinds = ["shipping"], basis = "after_discounts" }
+usage_limit = { WELCOME20 = 3 }
+idempotent_retry = true
+deterministic_sample = 50
+
+[generate]
+seed = 42
+carts = 300
+max_lines = 250
+currencies = ["USD"]

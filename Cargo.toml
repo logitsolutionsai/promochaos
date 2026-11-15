@@ -1,0 +1,69 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/promochaos-core",
+  "crates/promochaos-shopify",
+  "crates/promochaos-command",
+  "crates/promochaos-report",
+  "crates/promochaos-cli",
+  "examples/homegrown-cart",
+]
+# The example Shopify Functions build for wasm32-unknown-unknown with their own
+# Cargo.toml and lockfile, the way the Shopify CLI builds them.
+exclude = [
+  "examples/functions/tiered-discount-rust",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+# function-runner v9.2.3 pins Rust 1.95.0 in its rust-toolchain.toml and
+# wasmtime 48 needs a recent compiler, so the spec's MSRV of 1.85 is too low.
+rust-version = "1.95"
+license = "Apache-2.0"
+repository = "https://github.com/logitsolutionsai/promochaos"
+homepage = "https://github.com/logitsolutionsai/promochaos"
+authors = ["Logit Solutions AI"]
+
+[workspace.dependencies]
+promochaos-core = { path = "crates/promochaos-core", version = "0.1.0" }
+promochaos-shopify = { path = "crates/promochaos-shopify", version = "0.1.0", default-features = false }
+promochaos-command = { path = "crates/promochaos-command", version = "0.1.0" }
+promochaos-report = { path = "crates/promochaos-report", version = "0.1.0" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+toml = "0.8"
+rust_decimal = "1.39"
+rand_chacha = "0.9"
+rand_core = "0.9"
+thiserror = "2"
+clap = { version = "4.5", features = ["derive"] }
+minijinja = "2"
+# 0.6.1 is the first release on quick-xml 0.41, which fixes RUSTSEC-2026-0194 and
+# RUSTSEC-2026-0195 (cargo deny). The junit() API used by promochaos-report is unchanged.
+quick-junit = "0.6.1"
+apollo-compiler = "1.33"
+
+# Shopify's runner, used as a library. Not on crates.io, so promochaos is
+# released as binaries (dist) and npm, not as a crate.
+function-runner = { git = "https://github.com/Shopify/function-runner", tag = "v9.2.3" }
+# Must stay on the same major as function-runner (wasmtime 48) so the Engine and
+# Module types are the same types. Features are unified with function-runner's.
+wasmtime = { version = "48", default-features = false }
+
+proptest = "1.12"
+
+# `cargo build --release` stays quick: wasmtime and cranelift are large, and
+# with LTO and one codegen unit the first release build took more than 15
+# minutes on the QA machine (2026-11-15). The function under test runs as
+# cranelift-compiled Wasm either way, so LTO buys little run time here.
+[profile.release]
+strip = "symbols"
+
+# The profile that 'dist' builds release binaries with: smaller and a little
+# faster, worth the long build only for published artifacts.
+[profile.dist]
+inherits = "release"
+lto = "thin"
+codegen-units = 1

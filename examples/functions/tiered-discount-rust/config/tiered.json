@@ -1,0 +1,7 @@
+{
+  "tiers": [
+    { "threshold": "100.00", "percentage": "10" },
+    { "threshold": "200.00", "percentage": "20" }
+  ],
+  "multiBuy": { "minQuantity": 2, "percentage": "10" }
+}
