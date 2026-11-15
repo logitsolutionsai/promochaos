@@ -30,3 +30,6 @@ homegrown-state.json
 *.swp
 .DS_Store
 Thumbs.db
+
+# Launch video output (made by Projects/brag-kit)
+brag-output/
