@@ -1,4 +1,4 @@
-> **Status: pre-release.** Version 0.1.0 is not published yet; until it is, build from source. The results below were measured on 2026-11-15 on one Windows 11 machine (Intel Core i7-1280P, 16 GB), from a source build; anything still marked TBD has not been measured.
+> The results below were measured on 2026-11-15 on one Windows 11 machine (Intel Core i7-1280P, 16 GB), from a source build; anything still marked TBD has not been measured.
 
 # promochaos
 
@@ -53,11 +53,11 @@ Money is held in integer minor units, never floats.
 
 ## Install
 
-Once released, promochaos is available as:
-
 ```sh
-npx promochaos run                               # npm
-brew install logitsolutionsai/tap/promochaos     # Homebrew
+npx promochaos run                               # npm, without installing
+npm install -g promochaos                        # npm
+brew install logitsolutionsai/tap/promochaos     # Homebrew (macOS, Linux)
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/logitsolutionsai/promochaos/releases/latest/download/promochaos-installer.sh | sh
 ```
 
 Release binaries for Linux, macOS and Windows, with shell and PowerShell installers, are attached to each release at github.com/logitsolutionsai/promochaos/releases. promochaos is not published as a crate.
